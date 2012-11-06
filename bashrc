@@ -72,17 +72,6 @@ On_IPurple='\e[10;95m'  # Purple
 On_ICyan='\e[0;106m'    # Cyan
 On_IWhite='\e[0;107m'   # White
 
-# ===== Aliases =====
-server_logins="${HOME}/.server-login-aliases.bash"
-if [ -e $server_logins ]; then
-    source $server_logins
-fi
-
-# Other Aliases
-alias ll='ls -l'
-alias la='ls -a'
-alias lsd='ls -lh --dereference-command-line-symlink-to-dir'
-
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
 completion_file="${HOME}/.git-completion.bash"
@@ -134,8 +123,43 @@ BASE_PS1="\
 \[$path_color\]\w\
 \[$off\]\$ "
 
-# ===== Exports =====
 export PS1="${GIT_PS1}${BASE_PS1}"
+
+ls_color=""
+# ===== Aliases =====
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolord -b ~/.dircolord)" || eval "$(direcolord -b)"
+    ls_color=" --color=auto"
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+alias ls="ls${ls_color} -p"
+alias ll="ls${ls_color} -l"
+alias la="ls${ls_color} -a"
+
+# General aliases file
+bash_aliases=~/.bash_aliases
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# Server login aliases file
+server_logins=~/.server-login-aliases.bash
+if [ -f $server_logins ]; then
+    source $server_logins
+fi
+
+# Other Aliases
+
+# ===== History Configurations =====
+HISTSIZE=8192
+HISTFILESIZE=16384
+HISTCONTROL=ignoredups # ignorespace | ignoreboth
+shopt -s histappend
+shopt -s checkwinsize
 
 export PATH=/usr/local/git/bin:$HOME/opt/bin:$PATH:$HOME/bin
 export EDITOR=vim
