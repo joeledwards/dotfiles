@@ -128,7 +128,7 @@ export PS1="${GIT_PS1}${BASE_PS1}"
 ls_color=""
 # ===== Aliases =====
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolord -b ~/.dircolord)" || eval "$(direcolord -b)"
+    test -r ~/.dircolors && eval "$(dircolord -b ~/.dircolord)" || eval "$(dircolord -b)"
     ls_color=" --color=auto"
 
     alias grep='grep --color=auto'
