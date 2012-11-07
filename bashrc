@@ -1,3 +1,9 @@
+# Setup items
+bash_head=~/.bash_head
+if [ -f $bash_head ]; then
+    . $bash_head
+fi
+
 # ===== BASH Color Escape Sequences =====
 # Reset
 Color_Off='\e[0m'       # Text Reset
@@ -74,11 +80,11 @@ On_IWhite='\e[0;107m'   # White
 
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
-completion_file="${HOME}/.git-completion.bash"
+git_completion="${HOME}/.git-completion.bash"
 
 GIT_PS1=""
-if [ -e $completion_file ]; then
-    source $completion_file
+if [ -e $git_completion ]; then
+    . $git_completion
     repo_color=$Purple
     branch_color=$Green
     describe_color=$Yellow
@@ -136,23 +142,23 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# ls aliases
 alias ls="ls${ls_color} -p"
 alias ll="ls${ls_color} -l"
 alias la="ls${ls_color} -a"
 
 # General aliases file
 bash_aliases=~/.bash_aliases
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f $bash_aliases ]; then
+    . $bash_aliases
 fi
 
 # Server login aliases file
 server_logins=~/.server-login-aliases.bash
 if [ -f $server_logins ]; then
-    source $server_logins
+    . $server_logins
 fi
 
-# Other Aliases
 
 # ===== History Configurations =====
 HISTSIZE=8192
@@ -161,7 +167,16 @@ HISTCONTROL=ignoredups # ignorespace | ignoreboth
 shopt -s histappend
 shopt -s checkwinsize
 
-export PATH=/usr/local/git/bin:$HOME/opt/bin:$PATH:$HOME/bin
+home_bin=~/bin
+if [ -x $home_bin ]; then
+    PATH=$PATH:$home_bin
+fi
+home_rbin=~/rbin
+if [ -x $home_rbin ]; then
+    PATH=$home_rbin:$PATH
+fi
+export PATH
+
 export EDITOR=vim
 export VIEWER=view
 export GIT_SSH=`which ssh`
@@ -172,3 +187,8 @@ ulimit -c 500000000 # 500 MB
 # Vi key-bindings for shell (default is emacs)
 set -o vi
 
+# Additional items (wrap up)
+bash_tail=~/.bash_tail
+if [ -f $bash_tail ]; then
+    . $bash_tail
+fi
