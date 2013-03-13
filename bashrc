@@ -111,26 +111,39 @@ fi
 # ===== The timestamp PS1 =====
 date_color=$Green
 time_color=$Yellow
-time_year=`date +%Y`
-time_month=`date +%m`
-time_day=`date +%d`
-time_hour=`date +%H`
-time_minute=`date +%M`
-time_second=`date +%S`
 
-TIME_PS1="\
+function __year() {
+    printf "`date +%Y`"
+}
+function __month() {
+    printf "`date +%m`"
+}
+function __day() {
+    printf "`date +%d`"
+}
+function __hour() {
+    printf "`date +%H`"
+}
+function __minute() {
+    printf "`date +%M`"
+}
+function __second() {
+    printf "`date +%S`"
+}
+
+export TIME_PS1="\
 [\
-\[$date_color\]${time_year}\
+\[$date_color\]\$(__year)\
 \[$off\]-\
-\[$date_color\]${time_month}\
+\[$date_color\]\$(__month)\
 \[$off\]-\
-\[$date_color\]${time_day}\
+\[$date_color\]\$(__day)\
 \[$off\] \
-\[$time_color\]${time_hour}\
+\[$time_color\]\$(__hour)\
 \[$off\]:\
-\[$time_color\]${time_minute}\
+\[$time_color\]\$(__minute)\
 \[$off\]:\
-\[$time_color\]${time_second}\
+\[$time_color\]\$(__second)\
 \[$off\]\
 ]
 "
