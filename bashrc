@@ -108,8 +108,35 @@ if [ -e $git_completion ]; then
 "
 fi
 
+# ===== The timestamp PS1 =====
+date_color=$Green
+time_color=$Yellow
+time_year=`date +%Y`
+time_month=`date +%m`
+time_day=`date +%d`
+time_hour=`date +%H`
+time_minute=`date +%M`
+time_second=`date +%S`
+
+TIME_PS1="\
+[\
+\[$date_color\]${time_year}\
+\[$off\]-\
+\[$date_color\]${time_month}\
+\[$off\]-\
+\[$date_color\]${time_day}\
+\[$off\] \
+\[$time_color\]${time_hour}\
+\[$off\]:\
+\[$time_color\]${time_minute}\
+\[$off\]:\
+\[$time_color\]${time_second}\
+\[$off\]\
+]
+"
+
+
 # ===== The standard PS1 =====
-time_color=$White
 user_color=$Blue
 host_color=$Red
 path_color=$Cyan
@@ -122,11 +149,6 @@ if [ `id -u` -eq 0 ]; then
     host_color=$temp_color
 fi
 
-TIME_PS1="\
-\[$time_color\][`date +\"%Y-%m-%d %H:%M:%S\"`]\
-\[$off\]
-"
-
 BASE_PS1="\
 \[$user_color\]\u\
 \[$off\]@\
@@ -135,7 +157,7 @@ BASE_PS1="\
 \[$path_color\]\w\
 \[$off\]\$ "
 
-export PS1="${TIME_PS1}${GIT_PS1}${BASE_PS1}"
+export PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
 
 ls_color=""
 # ===== Aliases =====
