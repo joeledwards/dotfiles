@@ -109,6 +109,7 @@ if [ -e $git_completion ]; then
 fi
 
 # ===== The standard PS1 =====
+time_color=$White
 user_color=$Blue
 host_color=$Red
 path_color=$Cyan
@@ -121,6 +122,11 @@ if [ `id -u` -eq 0 ]; then
     host_color=$temp_color
 fi
 
+TIME_PS1="\
+\[$time_color\][`date +\"%Y-%m-%d %H:%M:%S\"`]\
+\[$off\]
+"
+
 BASE_PS1="\
 \[$user_color\]\u\
 \[$off\]@\
@@ -129,7 +135,7 @@ BASE_PS1="\
 \[$path_color\]\w\
 \[$off\]\$ "
 
-export PS1="${GIT_PS1}${BASE_PS1}"
+export PS1="${TIME_PS1}${GIT_PS1}${BASE_PS1}"
 
 ls_color=""
 # ===== Aliases =====
