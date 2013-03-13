@@ -170,6 +170,7 @@ fi
 HISTSIZE=8192
 HISTFILESIZE=16384
 HISTCONTROL=ignoredups # ignorespace | ignoreboth
+HISTTIMEFORMAT="%D - %T : "
 shopt -s histappend
 shopt -s checkwinsize
 
@@ -184,11 +185,14 @@ fi
 export PATH
 
 export EDITOR=vim
-export VIEWER=view
+export VISUAL=view
 export GIT_SSH=`which ssh`
 
 # Don't dump cores larger than this
 ulimit -c 500000000 # 500 MB
+
+# User-only writes
+umask 0022
 
 # Vi key-bindings for shell (default is emacs)
 set -o vi
