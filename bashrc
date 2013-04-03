@@ -173,6 +173,40 @@ BASE_PS1="\
 
 export PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
 
+#a -- black
+#b -- red
+#c -- green
+#d -- brown
+#e -- blue
+#f -- magenta
+#g -- cyan
+#h -- light gray
+#A -- bold black, usually shows up as dark gray
+#B -- bold red
+#C -- bold green
+#D -- bold brown, usually shows up as yellow
+#E -- bold blue
+#F -- bold magenta
+#G -- bold cyan
+#H -- bold light gray; looks like bright white
+#x -- default foreground or background
+
+#DIR=Ex
+#SYM_LINK=Gx
+#SOCKET=Fx
+#PIPE=dx
+#EXE=Cx
+#BLOCK_SP=Dx
+#CHAR_SP=Dx
+#EXE_SUID=hb
+#EXE_GUID=ad
+#DIR_STICKY=Ex
+#DIR_WO_STICKY=Ex
+
+export LSCOLORS=GxFxCxDxBxegedabagaced # BSD/OSX
+#export LS_COLORS=GxFxCxDxBxegedabagaced # Linux
+export CLICOLOR=1
+
 ls_color=""
 # ===== Aliases =====
 if [ -x /usr/bin/dircolors ]; then
