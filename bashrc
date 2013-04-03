@@ -91,7 +91,8 @@ if [ -e $git_completion ]; then
     off=$Color_Off
 
     GIT_PS1="\
-\$(__gitproject \"[\
+\$(__gitproject \"\
+\[$off\][\
 \[$repo_color\]%s\
 \[$off\]:\
 \")\
@@ -132,7 +133,7 @@ function __second() {
 }
 
 export TIME_PS1="\
-[\
+\[$off\][\
 \[$date_color\]\$(__year)\
 \[$off\]-\
 \[$date_color\]\$(__month)\
