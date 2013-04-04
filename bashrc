@@ -104,8 +104,8 @@ if [ -e $git_completion ]; then
 \
 \$(__gitdescribe \"\
 \[$describe_color\]%s\
-\[$off\]\
-]\n\n\")\
+\[$off\]]\
+\n\n\")\
 "
 fi
 
@@ -145,8 +145,8 @@ export TIME_PS1="\
 \[$time_color\]\$(__minute)\
 \[$off\]:\
 \[$time_color\]\$(__second)\
-\[$off\]\
-]
+\[$off\]]\
+\n\
 "
 
 
