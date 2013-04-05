@@ -78,6 +78,8 @@ On_IPurple='\e[10;95m'  # Purple
 On_ICyan='\e[0;106m'    # Cyan
 On_IWhite='\e[0;107m'   # White
 
+off=$Color_Off
+
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
 git_completion="${HOME}/.git-completion.bash"
@@ -88,7 +90,6 @@ if [ -e $git_completion ]; then
     repo_color=$Purple
     branch_color=$Green
     describe_color=$Yellow
-    off=$Color_Off
 
     GIT_PS1="\
 \$(__gitproject \"\
@@ -132,7 +133,7 @@ function __second() {
     printf "`date +%S`"
 }
 
-export TIME_PS1="\
+TIME_PS1="\
 \[$off\][\
 \[$date_color\]\$(__year)\
 \[$off\]-\
@@ -154,7 +155,6 @@ export TIME_PS1="\
 user_color=$Blue
 host_color=$Red
 path_color=$Cyan
-off=$Color_Off
 
 if [ `id -u` -eq 0 ]; then
     # Swap colors if we are root
