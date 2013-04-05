@@ -164,6 +164,7 @@ if [ `id -u` -eq 0 ]; then
 fi
 
 BASE_PS1="\
+\[$off\]\
 \[$user_color\]\u\
 \[$off\]@\
 \[$host_color\]\h\
