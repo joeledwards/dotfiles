@@ -94,17 +94,14 @@ if [ -e $git_completion ]; then
     GIT_PS1="\
 \$(__gitproject \"\
 \[$off\][\
+\[$describe_color\]git\
+\[$off\]:\
 \[$repo_color\]%s\
 \[$off\]:\
 \")\
 \
 \$(__git_ps1 \"\
 \[$branch_color\]%s\
-\[$off\]:\
-\")\
-\
-\$(__gitdescribe \"\
-\[$describe_color\]%s\
 \[$off\]]\
 \n\n\")\
 "
