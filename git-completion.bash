@@ -71,6 +71,12 @@ __git_ps1 ()
 		else
 			printf " (%s)" "${b##refs/heads/}"
 		fi
+	else
+		local c="`git rev-parse HEAD 2>/dev/null`"
+		if [ -n "$c" ]; then
+			#printf "$1" "${c}"
+			printf "$1" "(no branch)"
+		fi
 	fi
 }
 
