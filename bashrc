@@ -252,6 +252,12 @@ if [ -x $home_rbin ]; then
 fi
 export PATH
 
+py_lib=~/lib/python
+if [ -x $py_lib ]; then
+    PYTHONPATH=$py_lib:$PYTHONPATH
+fi
+export PYTHONPATH
+
 export EDITOR=vim
 export VISUAL=view
 export GIT_SSH=`which ssh`
