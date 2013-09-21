@@ -152,12 +152,14 @@ TIME_PS1="\
 user_color=$Blue
 host_color=$Red
 path_color=$Cyan
+prompt_symbol=\$
 
 if [ `id -u` -eq 0 ]; then
     # Swap colors if we are root
     temp_color=$user_color
     user_color=$host_color
     host_color=$temp_color
+    prompt_symbol=\#
 fi
 
 BASE_PS1="\
@@ -167,7 +169,7 @@ BASE_PS1="\
 \[$host_color\]\h\
 \[$off\]:\
 \[$path_color\]\w\
-\[$off\]\$ "
+\[$off\]$prompt_symbol "
 
 export PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
 
@@ -252,9 +254,9 @@ if [ -x $home_rbin ]; then
 fi
 export PATH
 
-py_lib=~/lib/python
-if [ -x $py_lib ]; then
-    PYTHONPATH=$py_lib:$PYTHONPATH
+python_lib=~/lib/python
+if [ -x $python_lib ]; then
+    PYTHONPATH=$python_lib:$PYTHONPATH
 fi
 export PYTHONPATH
 
