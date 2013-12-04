@@ -26,4 +26,7 @@ set splitright
 
 set cursorline
 set relativenumber
+"set undofile
+set guioptions=T
 
+let @p='0$F/ld^j@p'
