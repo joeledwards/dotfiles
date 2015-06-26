@@ -153,6 +153,9 @@ user_color=$Blue
 host_color=$Red
 path_color=$Cyan
 prompt_symbol=\$
+if [[ $SPECIAL_CHARACTERS == true ]]; then
+   prompt_symbol=λ
+fi
 
 if [ `id -u` -eq 0 ]; then
     # Swap colors if we are root
