@@ -1,7 +1,11 @@
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/vundle
+call vundle#rc()
+
 colorscheme koehler
 
 syntax on
-set nocompatible
 set backspace=2
 set ruler
 
@@ -30,3 +34,7 @@ set relativenumber
 set guioptions=T
 
 let @p='0$F/ld^j@p'
+
+Bundle 'gmarik/vundle'
+Bundle 'genoma/vim-less'
+
