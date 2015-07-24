@@ -1,7 +1,7 @@
 set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+"set rtp+=~/.vim/bundle/vundle
+"call vundle#rc()
 
 colorscheme koehler
 
@@ -35,6 +35,6 @@ set guioptions=T
 
 let @p='0$F/ld^j@p'
 
-Bundle 'gmarik/vundle'
-Bundle 'genoma/vim-less'
+"Bundle 'gmarik/vundle'
+"Bundle 'genoma/vim-less'
 
