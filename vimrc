@@ -27,6 +27,9 @@ set smartindent
 set softtabstop=2
 set ts=2
 set splitright
+set cindent
+set cinkeys-=0#
+set indentkeys-=0#
 
 set cursorline
 set relativenumber
