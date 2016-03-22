@@ -226,6 +226,7 @@ alias ls="ls${ls_color} -p"
 alias ll="ls${ls_color} -l"
 alias la="ls${ls_color} -a"
 alias lstree="tree -if --noreport"
+alias githash="git describe --always --abbrev=40"
 
 # General aliases file
 bash_aliases=~/.bash_aliases
