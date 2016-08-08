@@ -5,6 +5,9 @@ VIMRC=$HOME/.vimrc
 VIM_DIR=$HOME/.vim
 VRAPPERRC=$HOME/.vrapperrc
 
+BUNDLE_DIR=$HOME/.vim/bundle
+VUNDLE_DIR=$BUNDLE_DIR/Vundle.vim
+
 # Link .bashrc
 if [[ -e $BASHRC ]]; then
 	echo "${BASHRC} exists, skipping"
@@ -35,5 +38,19 @@ if [[ -e $VRAPPERRC ]]; then
 else
 	echo "linking ${VRAPPERRC}"
 	ln -s `readlink -f vrapperrc` $VRAPPERRC
+fi
+
+if [[ -e $BUNDLE_DIR ]]; then
+  echo "${BUNDLE_DIR} exists, skipping"
+else
+  echo "creating ${BUNDLE_DIR}"
+  mkdir $BUNDLE_DIR
+fi
+
+if [[ -e $VUNDLE_DIR ]]; then
+  echo "${VUNDLE_DIR} exists, skipping"
+else
+  echo "cloning Vundle repository to ${VUNDLE_DIR}"
+  git clone git://github.com/VundleVim/Vundle.vim.git ${VUNDLE_DIR}
 fi
 

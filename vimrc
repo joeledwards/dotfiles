@@ -1,8 +1,20 @@
 set nocompatible
 filetype off
-"set rtp+=~/.vim/bundle/vundle
-"call vundle#rc()
 
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" bundles
+Bundle 'Valloric/YouCompleteMe'
+
+
+" my Vim configuration
 colorscheme koehler
 
 syntax on
@@ -37,7 +49,4 @@ set relativenumber
 set guioptions=T
 
 let @p='0$F/ld^j@p'
-
-"Bundle 'gmarik/vundle'
-"Bundle 'genoma/vim-less'
 
