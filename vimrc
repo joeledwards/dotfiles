@@ -10,8 +10,12 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" bundles
-Bundle 'Valloric/YouCompleteMe'
+" plugins
+Plugin 'Valloric/YouCompleteMe'
+
+" All plugins before here
+call vundle#end()
+filetype plugin indent on
 
 
 " my Vim configuration
