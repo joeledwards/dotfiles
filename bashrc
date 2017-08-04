@@ -80,6 +80,19 @@ On_IWhite='\e[0;107m'   # White
 
 off=$Color_Off
 
+SuccessSymbol='\342\234\223'
+FailureSymbol='\342\234\227'
+
+date_color=$Green
+time_color=$Yellow
+duration_color=$Blue
+
+success_color=$Green
+failure_color=$Red
+
+user_color=$Blue
+host_color=$Red
+path_color=$Cyan
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
 git_completion="${HOME}/.git-completion.bash"
@@ -107,9 +120,18 @@ if [ -e $git_completion ]; then
 "
 fi
 
+# ==== Need these early on ====
+
+home_bin=~/bin
+if [ -x $home_bin ]; then
+    PATH=$PATH:$home_bin
+fi
+home_rbin=~/rbin
+if [ -x $home_rbin ]; then
+    PATH=$home_rbin:$PATH
+fi
+
 # ===== The timestamp PS1 =====
-date_color=$Green
-time_color=$Yellow
 
 function __year() {
     printf "`date +%Y`"
@@ -130,7 +152,32 @@ function __second() {
     printf "`date +%S`"
 }
 
-TIME_PS1="\
+function timer_now() {
+  ftime ns
+}
+
+function timer_start() {
+  timer_start=${timer_start:-$(timer_now)}
+}
+
+function timer_stop() {
+  local delta=$(($(timer_now) - $timer_start))
+  timer_show=`ftime format $delta`
+  unset timer_start
+}
+
+function set_prompt() {
+  last_result=$? # Must come first
+
+  if [[ $last_result == 0 ]]; then
+    result="\[$success_color\]$last_result $SuccessSymbol\[$off\]"
+  else
+    result="\[$failure_color\]$last_result $FailureSymbol\[$off\]"
+  fi
+
+  timer_stop
+
+  TIME_PS1="\
 \[$off\][\
 \[$date_color\]\$(__year)\
 \[$off\]-\
@@ -143,29 +190,26 @@ TIME_PS1="\
 \[$time_color\]\$(__minute)\
 \[$off\]:\
 \[$time_color\]\$(__second)\
-\[$off\]]\
-\n\
-"
+\[$off\]] \
+\[$duration_color\]took $timer_show\
+\[$off\] | $result |\
+\n"
 
+  # ===== The standard PS1 =====
+  prompt_symbol=\$
+  if [[ $SPECIAL_CHARACTERS == true ]]; then
+     prompt_symbol=λ
+  fi
 
-# ===== The standard PS1 =====
-user_color=$Blue
-host_color=$Red
-path_color=$Cyan
-prompt_symbol=\$
-if [[ $SPECIAL_CHARACTERS == true ]]; then
-   prompt_symbol=λ
-fi
+  if [ `id -u` -eq 0 ]; then
+      # Swap colors if we are root
+      temp_color=$user_color
+      user_color=$host_color
+      host_color=$temp_color
+      prompt_symbol=\#
+  fi
 
-if [ `id -u` -eq 0 ]; then
-    # Swap colors if we are root
-    temp_color=$user_color
-    user_color=$host_color
-    host_color=$temp_color
-    prompt_symbol=\#
-fi
-
-BASE_PS1="\
+  BASE_PS1="\
 \[$off\]\
 \[$user_color\]\u\
 \[$off\]@\
@@ -174,7 +218,11 @@ BASE_PS1="\
 \[$path_color\]\w\
 \[$off\]$prompt_symbol "
 
-export PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
+  PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
+}
+
+trap 'timer_start' DEBUG
+PROMPT_COMMAND='set_prompt'
 
 #a -- black
 #b -- red
@@ -249,14 +297,6 @@ HISTTIMEFORMAT="%D - %T : "
 shopt -s histappend
 shopt -s checkwinsize
 
-home_bin=~/bin
-if [ -x $home_bin ]; then
-    PATH=$PATH:$home_bin
-fi
-home_rbin=~/rbin
-if [ -x $home_rbin ]; then
-    PATH=$home_rbin:$PATH
-fi
 export PATH
 
 python_lib=~/lib/python

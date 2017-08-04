@@ -8,6 +8,9 @@ VRAPPERRC=$HOME/.vrapperrc
 BUNDLE_DIR=$HOME/.vim/bundle
 VUNDLE_DIR=$BUNDLE_DIR/Vundle.vim
 
+HOME_RBIN=$HOME/rbin
+HOME_BIN=$HOME/bin
+
 # Link .bashrc
 if [[ -e $BASHRC ]]; then
 	echo "${BASHRC} exists, skipping"
@@ -38,6 +41,21 @@ if [[ -e $VRAPPERRC ]]; then
 else
 	echo "linking ${VRAPPERRC}"
 	ln -s `readlink -f vrapperrc` $VRAPPERRC
+fi
+
+# Compile ftime.c
+echo "Building ftime utility"
+gcc -o ftime ftime.c
+
+# Link ftime
+if [[ -e $HOME_RBIN ]]; then
+  echo "Adding ftime utility to ~/rbin"
+  rm $HOME_RBIN/ftime
+  ln ftime $HOME_RBIN/ftime
+elif [[ -e $HOME_BIN ]]; then
+  echo "Adding ftime utility to ~/bin"
+  rm $HOME_BIN/ftime
+  ln ftime $HOME_BIN/ftime
 fi
 
 if [[ -e $BUNDLE_DIR ]]; then
