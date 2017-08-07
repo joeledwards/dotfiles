@@ -170,9 +170,9 @@ function set_prompt() {
   last_result=$? # Must come first
 
   if [[ $last_result == 0 ]]; then
-    result="\[$success_color\]$last_result $SuccessSymbol\[$off\]"
+    result="${success_color}${last_result} ${SuccessSymbol}${off}"
   else
-    result="\[$failure_color\]$last_result $FailureSymbol\[$off\]"
+    result="${failure_color}${last_result} ${FailureSymbol}${off}"
   fi
 
   timer_stop
