@@ -43,19 +43,23 @@ else
 	ln -s `readlink -f vrapperrc` $VRAPPERRC
 fi
 
-# Compile ftime.c
-echo "Building ftime utility"
-gcc -o ftime ftime.c
+CC=`which gcc || which clang`
 
-# Link ftime
-if [[ -e $HOME_RBIN ]]; then
-  echo "Adding ftime utility to ~/rbin"
-  rm $HOME_RBIN/ftime
-  ln ftime $HOME_RBIN/ftime
-elif [[ -e $HOME_BIN ]]; then
-  echo "Adding ftime utility to ~/bin"
-  rm $HOME_BIN/ftime
-  ln ftime $HOME_BIN/ftime
+if [[ ! -z $CC ]]; then
+  # Compile ftime.c
+  echo "Building ftime utility with ${CC}"
+  $CC -O2 -o ftime ftime.c
+
+  # Link ftime
+  if [[ -e $HOME_RBIN ]]; then
+    echo "Adding ftime utility to ~/rbin"
+    rm $HOME_RBIN/ftime
+    ln ftime $HOME_RBIN/ftime
+  elif [[ -e $HOME_BIN ]]; then
+    echo "Adding ftime utility to ~/bin"
+    rm $HOME_BIN/ftime
+    ln ftime $HOME_BIN/ftime
+  fi
 fi
 
 if [[ -e $BUNDLE_DIR ]]; then
