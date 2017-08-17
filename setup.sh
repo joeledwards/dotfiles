@@ -54,11 +54,11 @@ if [[ ! -z $CC ]]; then
   if [[ -e $HOME_RBIN ]]; then
     echo "Adding ftime utility to ~/rbin"
     rm $HOME_RBIN/ftime
-    ln ftime $HOME_RBIN/ftime
+    cp ftime $HOME_RBIN/ftime
   elif [[ -e $HOME_BIN ]]; then
     echo "Adding ftime utility to ~/bin"
     rm $HOME_BIN/ftime
-    ln ftime $HOME_BIN/ftime
+    cp ftime $HOME_BIN/ftime
   fi
 fi
 
