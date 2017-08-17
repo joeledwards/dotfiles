@@ -22,12 +22,12 @@
 #define COLOR_CYAN    "\x1B[36m"
 #define COLOR_WHITE   "\x1B[37m"
 
-uint64_t getNanoTimestamp(void) {
+int64_t getNanoTimestamp(void) {
     long nanos; // Milliseconds
     time_t timestamp;  // Seconds
     struct timespec spec;
 
-    uint64_t nanoTime;
+    int64_t nanoTime;
 
     clock_gettime(CLOCK_REALTIME, &spec);
 
@@ -42,12 +42,12 @@ uint64_t getNanoTimestamp(void) {
 
 struct tm_ext {
   struct tm *dateTime;
-  uint16_t millis;
+  int16_t millis;
 };
 
 void getUtcDateTime(struct tm_ext * timeInfo) {
-  uint64_t nanoTs;
-  uint32_t millis;
+  int64_t nanoTs;
+  int32_t millis;
   time_t timestamp;
   struct tm *dateTime;
 
@@ -55,7 +55,10 @@ void getUtcDateTime(struct tm_ext * timeInfo) {
   timestamp = nanoTs / 1000000000;
   dateTime = gmtime(&timestamp);
 
-  *timeInfo = (struct tm_ext) { .dateTime = dateTime, .millis = nanoTs / 1000000 & 1000 };
+  *timeInfo = (struct tm_ext) {
+    .dateTime = dateTime,
+    .millis = nanoTs / 1000000
+  };
 }
 
 struct tm *getDateTime(void) {
@@ -68,30 +71,35 @@ struct tm *getDateTime(void) {
   return dateTime;
 }
 
-void printNanoTime(uint64_t nanoTime) {
-  uint64_t high;
-  uint64_t low;
+void printNanoTime(int64_t nanoTime) {
+  int64_t high;
+  int64_t low;
+  int negative = nanoTime < 0 ? 1 : 0;
+  char* pre = negative ? "(" : "";
+  char* post = negative ? ")" : "";
+  nanoTime = negative ? (-1 * nanoTime) : nanoTime;
+
 
   if (nanoTime >= HOUR) {
     high = nanoTime / HOUR;
     low = nanoTime % HOUR / MINUTE;
-    printf("%ld h, %ld m\n", high, low);
+    printf("%s%ld h, %ld m%s\n", pre, high, low, post);
   } else if (nanoTime >= MINUTE) {
     high = nanoTime / MINUTE;
     low = nanoTime % MINUTE / SECOND;
-    printf("%ld m, %ld s\n", high, low);
+    printf("%s%ld m, %ld s%s\n", pre, high, low, post);
   } else if (nanoTime >= SECOND) {
     high = nanoTime / SECOND;
     low = nanoTime % SECOND / MILLISECOND;
-    printf("%ld.%03ld s\n", high, low);
+    printf("%s%ld.%03ld s%s\n", pre, high, low, post);
   } else if (nanoTime >= MILLISECOND) {
     high = nanoTime / MILLISECOND;
     low = nanoTime % MILLISECOND / MICROSECOND;
-    printf("%ld.%03ld ms\n", high, low);
+    printf("%s%ld.%03ld ms%s\n", pre, high, low, post);
   } else {
     high = nanoTime / MICROSECOND;
     low = nanoTime % MICROSECOND;
-    printf("%ld.%03ld us\n", high, low);
+    printf("%s%ld.%03ld us%s\n", pre, high, low, post);
   }
 }
 
@@ -106,7 +114,7 @@ int main(int argc, char **argv) {
   char *dateColor = COLOR_GREEN;
   char *timeColor = COLOR_YELLOW;
   char *noColor = COLOR_OFF;
-  uint64_t nanoTime;
+  int64_t nanoTime;
   struct tm_ext timeInfo;
   struct tm *dt;
 
