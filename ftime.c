@@ -63,32 +63,29 @@ struct tm *getDateTime(void) {
 void printNanoTime(int64_t nanoTime) {
   int64_t high = 0;
   int64_t low = 0;
-  int negative = nanoTime < 0 ? 1 : 0;
-  char* pre = negative ? "(" : "";
-  char* post = negative ? ")" : "";
-  nanoTime = negative ? (-1 * nanoTime) : nanoTime;
-
+  int negative = nanoTime < 0LL ? 1 : 0;
+  nanoTime = negative ? (-1LL * nanoTime) : nanoTime;
 
   if (nanoTime >= HOUR) {
     high = nanoTime / HOUR;
     low = nanoTime % HOUR / MINUTE;
-    printf("%s%ld h, %ld m%s\n", pre, high, low, post);
+    printf("%ld h, %ld m\n", high, low);
   } else if (nanoTime >= MINUTE) {
     high = nanoTime / MINUTE;
     low = nanoTime % MINUTE / SECOND;
-    printf("%s%ld m, %ld s%s\n", pre, high, low, post);
+    printf("%s%ld m, %ld s%s\n", high, low);
   } else if (nanoTime >= SECOND) {
     high = nanoTime / SECOND;
     low = nanoTime % SECOND / MILLISECOND;
-    printf("%s%ld.%03ld s%s\n", pre, high, low, post);
+    printf("%ld.%03ld s\n", high, low);
   } else if (nanoTime >= MILLISECOND) {
     high = nanoTime / MILLISECOND;
     low = nanoTime % MILLISECOND / MICROSECOND;
-    printf("%s%ld.%03ld ms%s\n", pre, high, low, post);
+    printf("%ld.%03ld ms\n", high, low);
   } else {
     high = nanoTime / MICROSECOND;
     low = nanoTime % MICROSECOND;
-    printf("%s%ld.%03ld us%s\n", pre, high, low, post);
+    printf("%ld.%03ld us\n", high, low);
   }
 }
 
