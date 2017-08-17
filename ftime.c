@@ -23,31 +23,20 @@
 #define COLOR_WHITE   "\x1B[37m"
 
 int64_t getNanoTimestamp(void) {
-    long nanos; // Milliseconds
-    time_t timestamp;  // Seconds
     struct timespec spec;
-
-    int64_t nanoTime;
-
     clock_gettime(CLOCK_REALTIME, &spec);
 
-    timestamp  = spec.tv_sec;
-    nanos = spec.tv_nsec;
-
-    nanoTime = timestamp * 1000000000;
-    nanoTime += nanos;
-
-    return nanoTime;
+    return 1000000000LL * spec.tv_sec + spec.tv_nsec;
 }
 
 struct tm_ext {
   struct tm *dateTime;
-  int16_t millis;
+  int32_t nanos;
 };
 
 void getUtcDateTime(struct tm_ext * timeInfo) {
   int64_t nanoTs;
-  int32_t millis;
+  int32_t nanos;
   time_t timestamp;
   struct tm *dateTime;
 
@@ -57,7 +46,7 @@ void getUtcDateTime(struct tm_ext * timeInfo) {
 
   *timeInfo = (struct tm_ext) {
     .dateTime = dateTime,
-    .millis = nanoTs / 1000000
+    .nanos = nanoTs
   };
 }
 
@@ -72,8 +61,8 @@ struct tm *getDateTime(void) {
 }
 
 void printNanoTime(int64_t nanoTime) {
-  int64_t high;
-  int64_t low;
+  int64_t high = 0;
+  int64_t low = 0;
   int negative = nanoTime < 0 ? 1 : 0;
   char* pre = negative ? "(" : "";
   char* post = negative ? ")" : "";
@@ -119,7 +108,7 @@ int main(int argc, char **argv) {
   struct tm *dt;
 
   if (argc == 2 && strcmp(argv[1], "ns") == 0) {
-    printf("%ld\n", getNanoTimestamp());
+    printf("%lld\n", getNanoTimestamp());
   } else if (argc == 2 && strcmp(argv[1], "us") == 0) {
     printf("%lld\n", getNanoTimestamp() / MICROSECOND);
   } else if (argc == 2 && strcmp(argv[1], "ms") == 0) {
@@ -140,7 +129,7 @@ int main(int argc, char **argv) {
         dt->tm_hour,
         dt->tm_min,
         dt->tm_sec,
-        timeInfo.millis
+        timeInfo.nanos / 1000000
     );
   } else if (argc == 2 && strcmp(argv[1], "iso-bash") == 0) {
     getUtcDateTime(&timeInfo);
@@ -152,7 +141,7 @@ int main(int argc, char **argv) {
         timeColor, dt->tm_hour, noColor,
         timeColor, dt->tm_min, noColor,
         timeColor, dt->tm_sec, noColor,
-        timeColor, timeInfo.millis, noColor
+        timeColor, timeInfo.nanos / 1000000, noColor
     );
   } else if (argc == 2 && strcmp(argv[1], "bash") == 0) {
     dt = getDateTime();
