@@ -93,6 +93,10 @@ failure_color=$Red
 user_color=$Blue
 host_color=$Red
 path_color=$Cyan
+
+root_user_color=$Red
+root_host_color=$Blue
+
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
 git_completion="${HOME}/.git-completion.bash"
@@ -205,9 +209,8 @@ $off \
 
   if [ `id -u` -eq 0 ]; then
       # Swap colors if we are root
-      temp_color=$user_color
-      user_color=$host_color
-      host_color=$temp_color
+      user_color=$root_user_color
+      host_color=$root_host_color
       prompt_symbol=\#
   fi
 
