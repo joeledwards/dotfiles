@@ -5,13 +5,12 @@
 #include <inttypes.h>
 #include <math.h>
 
-#define NANOSECOND 1LL
-#define MICROSECOND 1000LL
-#define MILLISECOND 1000000LL
-#define SECOND 1000000000LL
-#define MINUTE 60000000000LL
-#define HOUR 3600000000000LL
-
+#define NANOSECOND        (int64_t)1LL
+#define MICROSECOND    (int64_t)1000LL
+#define MILLISECOND (int64_t)1000000LL
+#define SECOND   (int64_t)1000000000LL
+#define MINUTE  (int64_t)60000000000LL
+#define HOUR  (int64_t)3600000000000LL
 
 #define COLOR_OFF     "\x1B[0m"
 #define COLOR_RED     "\x1B[31m"
@@ -23,48 +22,45 @@
 #define COLOR_WHITE   "\x1B[37m"
 
 int64_t getNanoTimestamp(void) {
-    struct timespec spec;
-    clock_gettime(CLOCK_REALTIME, &spec);
+  struct timespec spec;
+  clock_gettime(CLOCK_REALTIME, &spec);
 
-    return 1000000000LL * spec.tv_sec + spec.tv_nsec;
+  return SECOND * (int64_t)(spec.tv_sec) + (int64_t)(spec.tv_nsec);
 }
 
 struct tm_ext {
-  struct tm *dateTime;
-  int32_t nanos;
+  struct tm dateTime;
+  int64_t nanos;
 };
 
-void getUtcDateTime(struct tm_ext * timeInfo) {
+void getUtcDateTime(struct tm_ext *timeInfo) {
   int64_t nanoTs;
-  int32_t nanos;
   time_t timestamp;
   struct tm *dateTime;
 
   nanoTs = getNanoTimestamp();
-  timestamp = nanoTs / 1000000000;
+  timestamp = (time_t)(nanoTs / SECOND);
   dateTime = gmtime(&timestamp);
 
-  *timeInfo = (struct tm_ext) {
-    .dateTime = dateTime,
-    .nanos = nanoTs
-  };
+  memcpy(&(timeInfo->dateTime), dateTime, sizeof(struct tm));
+  timeInfo->nanos = nanoTs % SECOND;
 }
 
-struct tm *getDateTime(void) {
+void getDateTime(struct tm *dateTime) {
   time_t timestamp;
-  struct tm *dateTime;
+  struct tm *dt;
   
   timestamp = time(NULL);
-  dateTime = localtime(&timestamp);
-  
-  return dateTime;
+  dt = localtime(&timestamp);
+
+  memcpy(dateTime, dt, sizeof(struct tm));
 }
 
 void printNanoTime(int64_t nanoTime) {
   int64_t high = 0;
   int64_t low = 0;
-  int negative = nanoTime < 0LL ? 1 : 0;
-  nanoTime = negative ? (-1LL * nanoTime) : nanoTime;
+  int negative = nanoTime < (int64_t)0 ? 1 : 0;
+  nanoTime = negative ? ((int64_t)-1 * nanoTime) : nanoTime;
 
   if (nanoTime >= HOUR) {
     high = nanoTime / HOUR;
@@ -73,7 +69,7 @@ void printNanoTime(int64_t nanoTime) {
   } else if (nanoTime >= MINUTE) {
     high = nanoTime / MINUTE;
     low = nanoTime % MINUTE / SECOND;
-    printf("%s%ld m, %ld s%s\n", high, low);
+    printf("%ld m, %ld s\n", high, low);
   } else if (nanoTime >= SECOND) {
     high = nanoTime / SECOND;
     low = nanoTime % SECOND / MILLISECOND;
@@ -101,8 +97,12 @@ int main(int argc, char **argv) {
   char *timeColor = COLOR_YELLOW;
   char *noColor = COLOR_OFF;
   int64_t nanoTime;
+  int64_t millis;
   struct tm_ext timeInfo;
   struct tm *dt;
+
+  // Allocate space for the 
+  //timeInfo = malloc(sizeof(struct tm_ext));
 
   if (argc == 2 && strcmp(argv[1], "ns") == 0) {
     printf("%lld\n", getNanoTimestamp());
@@ -118,7 +118,8 @@ int main(int argc, char **argv) {
     printf("%lld\n", getNanoTimestamp() / HOUR);
   } else if (argc == 2 && strcmp(argv[1], "iso") == 0) {
     getUtcDateTime(&timeInfo);
-    dt = timeInfo.dateTime; 
+    dt = &(timeInfo.dateTime); 
+    millis = timeInfo.nanos / (int64_t)1000000;
     printf("%04d-%02d-%02dT%02d:%02d:%02d.%03dZ\n",
         dt->tm_year + 1900,
         dt->tm_mon + 1,
@@ -126,11 +127,12 @@ int main(int argc, char **argv) {
         dt->tm_hour,
         dt->tm_min,
         dt->tm_sec,
-        timeInfo.nanos / 1000000
+        millis
     );
   } else if (argc == 2 && strcmp(argv[1], "iso-bash") == 0) {
     getUtcDateTime(&timeInfo);
-    dt = timeInfo.dateTime; 
+    dt = &(timeInfo.dateTime); 
+    millis = timeInfo.nanos / (int64_t)1000000;
     printf("%s%04d%s-%s%02d%s-%s%02d%sT%s%02d%s:%s%02d%s:%s%02d%s.%s%03d%sZ\n",
         dateColor, dt->tm_year + 1900, noColor,
         dateColor, dt->tm_mon + 1, noColor,
@@ -138,10 +140,11 @@ int main(int argc, char **argv) {
         timeColor, dt->tm_hour, noColor,
         timeColor, dt->tm_min, noColor,
         timeColor, dt->tm_sec, noColor,
-        timeColor, timeInfo.nanos / 1000000, noColor
+        timeColor, millis, noColor
     );
   } else if (argc == 2 && strcmp(argv[1], "bash") == 0) {
-    dt = getDateTime();
+    dt = malloc(sizeof(struct tm));
+    getDateTime(dt);
     printf("%s%04d%s-%s%02d%s-%s%02d%s %s%02d%s:%s%02d%s:%s%02d%s\n",
         dateColor, dt->tm_year + 1900, noColor,
         dateColor, dt->tm_mon + 1, noColor,
