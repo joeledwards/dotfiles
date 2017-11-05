@@ -23,9 +23,15 @@
 
 int64_t getNanoTimestamp(void) {
   struct timespec spec;
+  int64_t nanoTs;
   clock_gettime(CLOCK_REALTIME, &spec);
 
-  return SECOND * (int64_t)(spec.tv_sec) + (int64_t)(spec.tv_nsec);
+  nanoTs = SECOND * (int64_t)(spec.tv_sec) + (int64_t)(spec.tv_nsec);
+  printf("spec.tv_sec: %ld\n", spec.tv_sec);
+  printf("spec.tv_nsec: %ld\n", spec.tv_nsec);
+  printf("nanoTs: %lld\n", nanoTs);
+
+  return nanoTs;
 }
 
 struct tm_ext {
@@ -44,6 +50,8 @@ void getUtcDateTime(struct tm_ext *timeInfo) {
 
   memcpy(&(timeInfo->dateTime), dateTime, sizeof(struct tm));
   timeInfo->nanos = nanoTs % SECOND;
+  printf("nanoTs: %lld\n", nanoTs);
+  printf("timeInfo->nanos: %lld\n", timeInfo->nanos);
 }
 
 void getDateTime(struct tm *dateTime) {
@@ -65,23 +73,23 @@ void printNanoTime(int64_t nanoTime) {
   if (nanoTime >= HOUR) {
     high = nanoTime / HOUR;
     low = nanoTime % HOUR / MINUTE;
-    printf("%ld h, %ld m\n", high, low);
+    printf("%lld h, %lld m\n", high, low);
   } else if (nanoTime >= MINUTE) {
     high = nanoTime / MINUTE;
     low = nanoTime % MINUTE / SECOND;
-    printf("%ld m, %ld s\n", high, low);
+    printf("%lld m, %lld s\n", high, low);
   } else if (nanoTime >= SECOND) {
     high = nanoTime / SECOND;
     low = nanoTime % SECOND / MILLISECOND;
-    printf("%ld.%03ld s\n", high, low);
+    printf("%lld.%03lld s\n", high, low);
   } else if (nanoTime >= MILLISECOND) {
     high = nanoTime / MILLISECOND;
     low = nanoTime % MILLISECOND / MICROSECOND;
-    printf("%ld.%03ld ms\n", high, low);
+    printf("%lld.%03lld ms\n", high, low);
   } else {
     high = nanoTime / MICROSECOND;
     low = nanoTime % MICROSECOND;
-    printf("%ld.%03ld us\n", high, low);
+    printf("%lld.%03lld us\n", high, low);
   }
 }
 
@@ -120,7 +128,8 @@ int main(int argc, char **argv) {
     getUtcDateTime(&timeInfo);
     dt = &(timeInfo.dateTime); 
     millis = timeInfo.nanos / (int64_t)1000000;
-    printf("%04d-%02d-%02dT%02d:%02d:%02d.%03dZ\n",
+    printf("millis: %lld\n", millis);
+    printf("%04d-%02d-%02dT%02d:%02d:%02d.%03lldZ\n",
         dt->tm_year + 1900,
         dt->tm_mon + 1,
         dt->tm_mday,
@@ -133,7 +142,8 @@ int main(int argc, char **argv) {
     getUtcDateTime(&timeInfo);
     dt = &(timeInfo.dateTime); 
     millis = timeInfo.nanos / (int64_t)1000000;
-    printf("%s%04d%s-%s%02d%s-%s%02d%sT%s%02d%s:%s%02d%s:%s%02d%s.%s%03d%sZ\n",
+    printf("millis: %lld\n", millis);
+    printf("%s%04d%s-%s%02d%s-%s%02d%sT%s%02d%s:%s%02d%s:%s%02d%s.%s%03lld%sZ\n",
         dateColor, dt->tm_year + 1900, noColor,
         dateColor, dt->tm_mon + 1, noColor,
         dateColor, dt->tm_mday, noColor,
