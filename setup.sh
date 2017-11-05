@@ -45,6 +45,18 @@ fi
 
 CC=`which gcc || which clang`
 
+# Create required bin directory
+if [[ ! -e $HOME_RBIN ]]; then
+	echo "creating directory ${HOME_RBIN}"
+  mkdir $HOME_RBIN
+fi
+
+# Create home bin directory
+if [[ ! -e $HOME_BIN ]]; then
+	echo "creating directory ${HOME_BIN}"
+  mkdir $HOME_BIN
+fi
+
 if [[ ! -z $CC ]]; then
   # Compile ftime.c
   echo "Building ftime utility with ${CC}"
