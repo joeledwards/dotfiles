@@ -156,17 +156,43 @@ function __second() {
     printf "`date +%S`"
 }
 
+function exexists() {
+  exe_name=$1
+  which $exe_name 2>&1 > /dev/null
+  echo $?
+}
+
 function timer_now() {
-  ftime ns
+  # Check that ftime exists before attempting to fetch nano-timestamp
+  if [[ $(exexists ftime) -eq 0 ]]; then
+    FTIME_TS=`ftime ns`
+  else
+    FTIME_TS=0
+  fi
+
+  echo $FTIME_TS
 }
 
 function timer_start() {
   timer_start=${timer_start:-$(timer_now)}
 }
 
+function format_duration() {
+  duration=$1
+
+  # Check that ftime exists before attempting to format the duration
+  if [[ $(exexists ftime) -eq 0 ]]; then
+    duration_string=`ftime format $duration`
+  else
+    duration_string="?"
+  fi
+
+  echo $duration_string
+}
+
 function timer_stop() {
   local delta=$(($(timer_now) - $timer_start))
-  timer_show=`ftime format $delta`
+  timer_show=`format_duration $delta`
   unset timer_start
 }
 
