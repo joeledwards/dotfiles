@@ -24,12 +24,9 @@
 int64_t getNanoTimestamp(void) {
   struct timespec spec;
   int64_t nanoTs;
-  clock_gettime(CLOCK_REALTIME, &spec);
 
+  clock_gettime(CLOCK_REALTIME, &spec);
   nanoTs = SECOND * (int64_t)(spec.tv_sec) + (int64_t)(spec.tv_nsec);
-  printf("spec.tv_sec: %ld\n", spec.tv_sec);
-  printf("spec.tv_nsec: %ld\n", spec.tv_nsec);
-  printf("nanoTs: %lld\n", nanoTs);
 
   return nanoTs;
 }
@@ -50,8 +47,6 @@ void getUtcDateTime(struct tm_ext *timeInfo) {
 
   memcpy(&(timeInfo->dateTime), dateTime, sizeof(struct tm));
   timeInfo->nanos = nanoTs % SECOND;
-  printf("nanoTs: %lld\n", nanoTs);
-  printf("timeInfo->nanos: %lld\n", timeInfo->nanos);
 }
 
 void getDateTime(struct tm *dateTime) {
@@ -128,7 +123,6 @@ int main(int argc, char **argv) {
     getUtcDateTime(&timeInfo);
     dt = &(timeInfo.dateTime); 
     millis = timeInfo.nanos / (int64_t)1000000;
-    printf("millis: %lld\n", millis);
     printf("%04d-%02d-%02dT%02d:%02d:%02d.%03lldZ\n",
         dt->tm_year + 1900,
         dt->tm_mon + 1,
@@ -142,7 +136,6 @@ int main(int argc, char **argv) {
     getUtcDateTime(&timeInfo);
     dt = &(timeInfo.dateTime); 
     millis = timeInfo.nanos / (int64_t)1000000;
-    printf("millis: %lld\n", millis);
     printf("%s%04d%s-%s%02d%s-%s%02d%sT%s%02d%s:%s%02d%s:%s%02d%s.%s%03lld%sZ\n",
         dateColor, dt->tm_year + 1900, noColor,
         dateColor, dt->tm_mon + 1, noColor,
