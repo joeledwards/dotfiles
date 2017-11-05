@@ -157,42 +157,51 @@ function __second() {
 }
 
 function exexists() {
-  exe_name=$1
+  local exe_name=$1
   which $exe_name 2>&1 > /dev/null
   echo $?
 }
 
-function timer_now() {
-  # Check that ftime exists before attempting to fetch nano-timestamp
-  if [[ $(exexists ftime) -eq 0 ]]; then
-    FTIME_TS=`ftime ns`
-  else
-    FTIME_TS=0
-  fi
+function bash_time() {
+  echo "$date_color\$(__year)\
+$off-\
+$date_color\$(__month)\
+$off-\
+$date_color\$(__day)\
+$off \
+$time_color\$(__hour)\
+$off:\
+$time_color\$(__minute)\
+$off:\
+$time_color\$(__second)\
+$off"
+}
 
-  echo $FTIME_TS
+FTIME_FOUND=$(exexists ftime)
+
+function fmtime() {
+  if [[ $FTIME_FOUND -eq 0 ]]; then
+    ftime $@
+  elif [[ $1 == "format" ]]; then
+    echo ""
+  elif [[ $1 == "bash" ]]; then
+    bash_time
+  else
+    echo "0"
+  fi
+}
+
+function timer_now() {
+  fmtime ns
 }
 
 function timer_start() {
   timer_start=${timer_start:-$(timer_now)}
 }
 
-function format_duration() {
-  duration=$1
-
-  # Check that ftime exists before attempting to format the duration
-  if [[ $(exexists ftime) -eq 0 ]]; then
-    duration_string=`ftime format $duration`
-  else
-    duration_string="?"
-  fi
-
-  echo $duration_string
-}
-
 function timer_stop() {
   local delta=$(($(timer_now) - $timer_start))
-  timer_show=`format_duration $delta`
+  timer_show=$(fmtime format $delta)
   unset timer_start
 }
 
@@ -209,17 +218,7 @@ function set_prompt() {
 
   TIME_PS1="\
 $off[\
-$date_color\$(__year)\
-$off-\
-$date_color\$(__month)\
-$off-\
-$date_color\$(__day)\
-$off \
-$time_color\$(__hour)\
-$off:\
-$time_color\$(__minute)\
-$off:\
-$time_color\$(__second)\
+$(fmtime bash)\
 $off] \
 $duration_color\
 $timer_show\
