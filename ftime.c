@@ -89,10 +89,10 @@ void printNanoTime(int64_t nanoTime) {
 }
 
 void usage(void) {
-  printf("Usage: time format <nano_timestamp>\n");
-  printf("       time ns|us|ms|s|m|h\n");
-  printf("       time iso|iso-bash\n");
-  printf("       time bash\n");
+  printf("Usage: ftime format <nano_timestamp>\n");
+  printf("       ftime ns|us|ms|s|m|h\n");
+  printf("       ftime iso|iso-bash\n");
+  printf("       ftime bash\n");
 }
 
 int main(int argc, char **argv) {
