@@ -36,17 +36,21 @@ struct tm_ext {
   int64_t nanos;
 };
 
-void getUtcDateTime(struct tm_ext *timeInfo) {
-  int64_t nanoTs;
+void nsToUtcDateTime(int64_t nanoTs, struct tm_ext *timeInfo) {
   time_t timestamp;
   struct tm *dateTime;
 
-  nanoTs = getNanoTimestamp();
   timestamp = (time_t)(nanoTs / SECOND);
   dateTime = gmtime(&timestamp);
 
   memcpy(&(timeInfo->dateTime), dateTime, sizeof(struct tm));
   timeInfo->nanos = nanoTs % SECOND;
+}
+
+
+void getUtcDateTime(struct tm_ext *timeInfo) {
+  int64_t nanoTs = getNanoTimestamp();
+  nsToUtcDateTime(nanoTs, timeInfo);
 }
 
 void getDateTime(struct tm *dateTime) {
@@ -59,53 +63,96 @@ void getDateTime(struct tm *dateTime) {
   memcpy(dateTime, dt, sizeof(struct tm));
 }
 
-void printNanoTime(int64_t nanoTime) {
+void printNanoDuration(int64_t nanos) {
   int64_t high = 0;
   int64_t low = 0;
-  int negative = nanoTime < (int64_t)0 ? 1 : 0;
-  nanoTime = negative ? ((int64_t)-1 * nanoTime) : nanoTime;
+  int negative = nanos < (int64_t)0 ? 1 : 0;
+  nanos = negative ? ((int64_t)-1 * nanos) : nanos;
 
-  if (nanoTime >= HOUR) {
-    high = nanoTime / HOUR;
-    low = nanoTime % HOUR / MINUTE;
+  if (nanos >= HOUR) {
+    high = nanos / HOUR;
+    low = nanos % HOUR / MINUTE;
     printf("%lld h, %lld m\n", high, low);
-  } else if (nanoTime >= MINUTE) {
-    high = nanoTime / MINUTE;
-    low = nanoTime % MINUTE / SECOND;
+  } else if (nanos >= MINUTE) {
+    high = nanos / MINUTE;
+    low = nanos % MINUTE / SECOND;
     printf("%lld m, %lld s\n", high, low);
-  } else if (nanoTime >= SECOND) {
-    high = nanoTime / SECOND;
-    low = nanoTime % SECOND / MILLISECOND;
+  } else if (nanos >= SECOND) {
+    high = nanos / SECOND;
+    low = nanos % SECOND / MILLISECOND;
     printf("%lld.%03lld s\n", high, low);
-  } else if (nanoTime >= MILLISECOND) {
-    high = nanoTime / MILLISECOND;
-    low = nanoTime % MILLISECOND / MICROSECOND;
+  } else if (nanos >= MILLISECOND) {
+    high = nanos / MILLISECOND;
+    low = nanos % MILLISECOND / MICROSECOND;
     printf("%lld.%03lld ms\n", high, low);
   } else {
-    high = nanoTime / MICROSECOND;
-    low = nanoTime % MICROSECOND;
+    high = nanos / MICROSECOND;
+    low = nanos % MICROSECOND;
     printf("%lld.%03lld us\n", high, low);
   }
 }
 
-void usage(void) {
-  printf("Usage: ftime format <nano_timestamp>\n");
-  printf("       ftime ns|us|ms|s|m|h\n");
-  printf("       ftime iso|iso-bash\n");
-  printf("       ftime bash\n");
+void iso(struct tm_ext *timeInfo) {
+    struct tm *dt = &(timeInfo->dateTime); 
+    int64_t millis = timeInfo->nanos / (int64_t)1000000;
+    printf("%04d-%02d-%02dT%02d:%02d:%02d.%03lldZ\n",
+        dt->tm_year + 1900,
+        dt->tm_mon + 1,
+        dt->tm_mday,
+        dt->tm_hour,
+        dt->tm_min,
+        dt->tm_sec,
+        millis
+    );
 }
 
-int main(int argc, char **argv) {
+void bash(struct tm *dt) {
   char *dateColor = COLOR_GREEN;
   char *timeColor = COLOR_YELLOW;
   char *noColor = COLOR_OFF;
-  int64_t nanoTime;
+
+  getDateTime(dt);
+  printf("%s%04d%s-%s%02d%s-%s%02d%s %s%02d%s:%s%02d%s:%s%02d%s\n",
+      dateColor, dt->tm_year + 1900, noColor,
+      dateColor, dt->tm_mon + 1, noColor,
+      dateColor, dt->tm_mday, noColor,
+      timeColor, dt->tm_hour, noColor,
+      timeColor, dt->tm_min, noColor,
+      timeColor, dt->tm_sec, noColor
+  );
+}
+
+void isoBash(struct tm_ext *timeInfo) {
+  char *dateColor = COLOR_GREEN;
+  char *timeColor = COLOR_YELLOW;
+  char *noColor = COLOR_OFF;
+
+  struct tm *dt = &(timeInfo->dateTime); 
+  int64_t millis = timeInfo->nanos / (int64_t)1000000;
+  printf("%s%04d%s-%s%02d%s-%s%02d%sT%s%02d%s:%s%02d%s:%s%02d%s.%s%03lld%sZ\n",
+      dateColor, dt->tm_year + 1900, noColor,
+      dateColor, dt->tm_mon + 1, noColor,
+      dateColor, dt->tm_mday, noColor,
+      timeColor, dt->tm_hour, noColor,
+      timeColor, dt->tm_min, noColor,
+      timeColor, dt->tm_sec, noColor,
+      timeColor, millis, noColor
+  );
+}
+
+void usage(void) {
+  printf("Usage: time format <nano_duration>\n");
+  printf("       time ns|us|ms|s|m|h\n");
+  printf("       time ns-iso|us-iso|m-iso|s-iso <timestamp>\n");
+  printf("       time iso|iso-bash\n");
+  printf("       time bash\n");
+}
+
+int main(int argc, char **argv) {
+  int64_t nanos;
   int64_t millis;
   struct tm_ext timeInfo;
-  struct tm *dt;
-
-  // Allocate space for the 
-  //timeInfo = malloc(sizeof(struct tm_ext));
+  struct tm dt;
 
   if (argc == 2 && strcmp(argv[1], "ns") == 0) {
     printf("%lld\n", getNanoTimestamp());
@@ -121,44 +168,32 @@ int main(int argc, char **argv) {
     printf("%lld\n", getNanoTimestamp() / HOUR);
   } else if (argc == 2 && strcmp(argv[1], "iso") == 0) {
     getUtcDateTime(&timeInfo);
-    dt = &(timeInfo.dateTime); 
-    millis = timeInfo.nanos / (int64_t)1000000;
-    printf("%04d-%02d-%02dT%02d:%02d:%02d.%03lldZ\n",
-        dt->tm_year + 1900,
-        dt->tm_mon + 1,
-        dt->tm_mday,
-        dt->tm_hour,
-        dt->tm_min,
-        dt->tm_sec,
-        millis
-    );
+    iso(&timeInfo);
   } else if (argc == 2 && strcmp(argv[1], "iso-bash") == 0) {
     getUtcDateTime(&timeInfo);
-    dt = &(timeInfo.dateTime); 
-    millis = timeInfo.nanos / (int64_t)1000000;
-    printf("%s%04d%s-%s%02d%s-%s%02d%sT%s%02d%s:%s%02d%s:%s%02d%s.%s%03lld%sZ\n",
-        dateColor, dt->tm_year + 1900, noColor,
-        dateColor, dt->tm_mon + 1, noColor,
-        dateColor, dt->tm_mday, noColor,
-        timeColor, dt->tm_hour, noColor,
-        timeColor, dt->tm_min, noColor,
-        timeColor, dt->tm_sec, noColor,
-        timeColor, millis, noColor
-    );
+    isoBash(&timeInfo);
   } else if (argc == 2 && strcmp(argv[1], "bash") == 0) {
-    dt = malloc(sizeof(struct tm));
-    getDateTime(dt);
-    printf("%s%04d%s-%s%02d%s-%s%02d%s %s%02d%s:%s%02d%s:%s%02d%s\n",
-        dateColor, dt->tm_year + 1900, noColor,
-        dateColor, dt->tm_mon + 1, noColor,
-        dateColor, dt->tm_mday, noColor,
-        timeColor, dt->tm_hour, noColor,
-        timeColor, dt->tm_min, noColor,
-        timeColor, dt->tm_sec, noColor
-    );
+    getDateTime(&dt);
+    bash(&dt);
   } else if (argc == 3 && strcmp(argv[1], "format") == 0) {
-    nanoTime = atoll(argv[2]);
-    printNanoTime(nanoTime);
+    nanos = atoll(argv[2]);
+    printNanoDuration(nanos);
+  } else if (argc == 3 && strcmp(argv[1], "ns-iso") == 0) {
+    millis = atoll(argv[2]);
+    nsToUtcDateTime(millis, &timeInfo);
+    iso(&timeInfo);
+  } else if (argc == 3 && strcmp(argv[1], "us-iso") == 0) {
+    millis = atoll(argv[2]) * MICROSECOND;
+    nsToUtcDateTime(millis, &timeInfo);
+    iso(&timeInfo);
+  } else if (argc == 3 && strcmp(argv[1], "ms-iso") == 0) {
+    millis = atoll(argv[2]) * MILLISECOND;
+    nsToUtcDateTime(millis, &timeInfo);
+    iso(&timeInfo);
+  } else if (argc == 3 && strcmp(argv[1], "s-iso") == 0) {
+    millis = atoll(argv[2]) * SECOND;
+    nsToUtcDateTime(millis, &timeInfo);
+    iso(&timeInfo);
   } else {
     usage();
     return 1;
