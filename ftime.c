@@ -141,11 +141,11 @@ void isoBash(struct tm_ext *timeInfo) {
 }
 
 void usage(void) {
-  printf("Usage: time format <nano_duration>\n");
-  printf("       time ns|us|ms|s|m|h\n");
-  printf("       time ns-iso|us-iso|m-iso|s-iso <timestamp>\n");
-  printf("       time iso|iso-bash\n");
-  printf("       time bash\n");
+  printf("Usage: ftime format <nano_duration>\n");
+  printf("       ftime ns|us|ms|s|m|h\n");
+  printf("       ftime ns-iso|us-iso|m-iso|s-iso <timestamp>\n");
+  printf("       ftime iso|iso-bash\n");
+  printf("       ftime bash\n");
 }
 
 int main(int argc, char **argv) {
