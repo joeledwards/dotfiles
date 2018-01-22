@@ -227,9 +227,9 @@ $off \
 \n"
 
   # ===== The standard PS1 =====
-  prompt_symbol=\$
-  if [[ $SPECIAL_CHARACTERS == true ]]; then
-     prompt_symbol=λ
+  prompt_symbol=λ
+  if [[ $SPECIAL_CHARACTERS == false ]]; then
+     prompt_symbol=\$
   fi
 
   if [ `id -u` -eq 0 ]; then
