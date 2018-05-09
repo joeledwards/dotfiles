@@ -4,6 +4,7 @@ BASHRC=$HOME/.bashrc
 VIMRC=$HOME/.vimrc
 VIM_DIR=$HOME/.vim
 VRAPPERRC=$HOME/.vrapperrc
+TMUXCONF=$HOME/.tmux.conf
 
 BUNDLE_DIR=$HOME/.vim/bundle
 VUNDLE_DIR=$BUNDLE_DIR/Vundle.vim
@@ -41,6 +42,14 @@ if [[ -e $VRAPPERRC ]]; then
 else
 	echo "linking ${VRAPPERRC}"
 	ln -s `readlink -f vrapperrc` $VRAPPERRC
+fi
+
+# Link .tmux.conf
+if [[ -e $TMUXCONF ]]; then
+	echo "${TMUXCONF} exists, skipping"
+else
+	echo "linking ${TMUXCONF}"
+	ln -s `readlink -f tmux.conf` $TMUXCONF
 fi
 
 CC=`which gcc || which clang`
