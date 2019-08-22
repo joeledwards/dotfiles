@@ -47,8 +47,12 @@ set cindent
 set cinkeys-=0#
 set indentkeys-=0#
 
+" Draw a line across the window under the cursor
 set cursorline
-set relativenumber
+
+" Show relative line numbers, but absolute line number for the cursor line
+set number relativenumber
+
 "set undofile
 set guioptions=T
 

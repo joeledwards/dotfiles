@@ -2,6 +2,7 @@
 
 BASHRC=$HOME/.bashrc
 VIMRC=$HOME/.vimrc
+IDEAVIMRC=$HOME/.ideavimrc
 VIM_DIR=$HOME/.vim
 VRAPPERRC=$HOME/.vrapperrc
 TMUXCONF=$HOME/.tmux.conf
@@ -26,6 +27,14 @@ if [[ -e $VIMRC ]]; then
 else
 	echo "linking ${VIMRC}"
 	ln -s `readlink -f vimrc` $VIMRC
+fi
+
+# Link .ideavimrc
+if [[ -e $IDEAVIMRC ]]; then
+	echo "${IDEAVIMRC} exists, skipping"
+else
+	echo "linking ${IDEAVIMRC}"
+	ln -s `readlink -f ideavimrc` $IDEAVIMRC
 fi
 
 # Link .vim

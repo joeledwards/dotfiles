@@ -148,4 +148,7 @@ module.exports = {
     // Example
     // 'window:devtools': 'cmd+alt+o',
   },
+
+  // Number of lines of history to retain
+  scrollback: 1000000,
 };
