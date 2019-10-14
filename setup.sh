@@ -13,12 +13,14 @@ VUNDLE_DIR=$BUNDLE_DIR/Vundle.vim
 HOME_RBIN=$HOME/rbin
 HOME_BIN=$HOME/bin
 
+READLINK=`which greadlink || which readlink`
+
 # Link .bashrc
 if [[ -e $BASHRC ]]; then
 	echo "${BASHRC} exists, skipping"
 else
 	echo "linking ${BASHRC}"
-	ln -s `readlink -f bashrc` $BASHRC
+	ln -s `$READLINK -f bashrc` $BASHRC
 fi
 
 # Link .vimrc
@@ -26,7 +28,7 @@ if [[ -e $VIMRC ]]; then
 	echo "${VIMRC} exists, skipping"
 else
 	echo "linking ${VIMRC}"
-	ln -s `readlink -f vimrc` $VIMRC
+	ln -s `$READLINK -f vimrc` $VIMRC
 fi
 
 # Link .ideavimrc
@@ -34,7 +36,7 @@ if [[ -e $IDEAVIMRC ]]; then
 	echo "${IDEAVIMRC} exists, skipping"
 else
 	echo "linking ${IDEAVIMRC}"
-	ln -s `readlink -f ideavimrc` $IDEAVIMRC
+	ln -s `$READLINK -f ideavimrc` $IDEAVIMRC
 fi
 
 # Link .vim
@@ -42,7 +44,7 @@ if [[ -e $VIM_DIR ]]; then
 	echo "${VIM_DIR} exists, skipping"
 else
 	echo "linking ${VIM_DIR}"
-	ln -s `readlink -f vim` $VIM_DIR
+	ln -s `$READLINK -f vim` $VIM_DIR
 fi
 
 # Link .vrapperrc
@@ -50,7 +52,7 @@ if [[ -e $VRAPPERRC ]]; then
 	echo "${VRAPPERRC} exists, skipping"
 else
 	echo "linking ${VRAPPERRC}"
-	ln -s `readlink -f vrapperrc` $VRAPPERRC
+	ln -s `$READLINK -f vrapperrc` $VRAPPERRC
 fi
 
 # Link .tmux.conf
@@ -58,7 +60,7 @@ if [[ -e $TMUXCONF ]]; then
 	echo "${TMUXCONF} exists, skipping"
 else
 	echo "linking ${TMUXCONF}"
-	ln -s `readlink -f tmux.conf` $TMUXCONF
+	ln -s `$READLINK -f tmux.conf` $TMUXCONF
 fi
 
 CC=`which gcc || which clang`
