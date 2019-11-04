@@ -86,6 +86,7 @@ FailureSymbol='\342\234\227'
 date_color=$Green
 time_color=$Yellow
 duration_color=$Blue
+pyver_color=$White
 venv_color=$Yellow
 
 success_color=$Green
@@ -210,9 +211,17 @@ function timer_stop() {
 }
 
 function venv_info() {
-  local deactivateType=`type -t deactivate`
-  if [ "${deactivateType}" = "function" ]; then
-    printf "${venv_color}0-0${off} -> "
+  local deactivate_type=`type -t deactivate`
+  if [ "${deactivate_type}" = "function" ]; then
+    local venv_path=`echo $VIRTUAL_ENV`
+    local venv_name=""
+    if [ -z "$venv_path" ]; then
+      venv_name="(${pyver_color}??${off}) "
+    else
+      local venv_base=`basename ${venv_path}`
+      venv_name="(${pyver_color}${venv_base}${off}) "
+    fi
+    printf "${venv_color}0-0${off} ${venv_name}-> "
   else
     printf ""
   fi
