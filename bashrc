@@ -105,21 +105,24 @@ git_completion="${HOME}/.git-completion.bash"
 GIT_PS1=""
 if [ -e $git_completion ]; then
     . $git_completion
-    repo_color=$Purple
-    branch_color=$Green
-    describe_color=$Yellow
+    repo_color=$Yellow
+    branch_color=$White
+    describe_color=$Green
 
     GIT_PS1="\
 \$(__gitproject \"\
 $off[\
-$describe_colorgit\
-$off:\
 $repo_color%s\
 $off:\
 \")\
 \
 \$(__git_ps1 \"\
 $branch_color%s\
+$off:\
+\")\
+\
+\$(__gitdescribe \"\
+$describe_color%s\
 $off]\
 \n\n\")\
 "
