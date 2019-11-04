@@ -86,6 +86,7 @@ FailureSymbol='\342\234\227'
 date_color=$Green
 time_color=$Yellow
 duration_color=$Blue
+venv_color=$Yellow
 
 success_color=$Green
 failure_color=$Red
@@ -205,6 +206,15 @@ function timer_stop() {
   unset timer_start
 }
 
+function venv_info() {
+  local deactivateType=`type -t deactivate`
+  if [ "${deactivateType}" = "function" ]; then
+    printf "${venv_color}0-0${off} -> "
+  else
+    printf ""
+  fi
+}
+
 function set_prompt() {
   last_result=$? # Must come first
 
@@ -239,6 +249,8 @@ $off \
       prompt_symbol=\#
   fi
 
+  PY_VENV="$(venv_info)"
+
   BASE_PS1="\
 $off\
 $user_color\u\
@@ -248,7 +260,7 @@ $off:\
 $path_color\w\
 $off$prompt_symbol "
 
-  PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
+  PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}${PY_VENV}"
 }
 
 trap 'timer_start' DEBUG
