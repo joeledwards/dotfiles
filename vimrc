@@ -10,8 +10,18 @@ filetype off
 " let Vundle manage Vundle, required
 " Plugin 'VundleVim/Vundle.vim'
 
+" Is this needed
+"source %
+"PluginInstall
+
 " plugins
-" Plugin 'Valloric/YouCompleteMe'
+"Plugin 'ntpeters/vim-better-whitespace'
+"Plugin 'tpope/vim-fugitive'
+"Plugin 'junegunn/fzf'
+"Plugin 'yggdroot/indentlilne'
+"Plugin 'scoolroose/nerdtree'
+"Plugin 'kien/rainbow_parentheses.vim'
+"Plugin 'Valloric/YouCompleteMe'
 
 " All plugins before here
 " call vundle#end()
@@ -53,4 +63,3 @@ set relativenumber
 set guioptions=T
 
 let @p='0$F/ld^j@p'
-
