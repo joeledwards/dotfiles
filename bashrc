@@ -86,6 +86,8 @@ FailureSymbol='\342\234\227'
 date_color=$Green
 time_color=$Yellow
 duration_color=$Blue
+pyver_color=$White
+venv_color=$Yellow
 
 success_color=$Green
 failure_color=$Red
@@ -104,21 +106,24 @@ git_completion="${HOME}/.git-completion.bash"
 GIT_PS1=""
 if [ -e $git_completion ]; then
     . $git_completion
-    repo_color=$Purple
-    branch_color=$Green
-    describe_color=$Yellow
+    repo_color=$Yellow
+    branch_color=$White
+    describe_color=$Green
 
     GIT_PS1="\
 \$(__gitproject \"\
 $off[\
-$describe_colorgit\
-$off:\
 $repo_color%s\
 $off:\
 \")\
 \
 \$(__git_ps1 \"\
 $branch_color%s\
+$off:\
+\")\
+\
+\$(__gitdescribe \"\
+$describe_color%s\
 $off]\
 \n\n\")\
 "
@@ -205,6 +210,23 @@ function timer_stop() {
   unset timer_start
 }
 
+function venv_info() {
+  local deactivate_type=`type -t deactivate`
+  if [ "${deactivate_type}" = "function" ]; then
+    local venv_path=`echo $VIRTUAL_ENV`
+    local venv_name=""
+    if [ -z "$venv_path" ]; then
+      venv_name="(${pyver_color}??${off}) "
+    else
+      local venv_base=`basename ${venv_path}`
+      venv_name="(${pyver_color}${venv_base}${off}) "
+    fi
+    printf "${venv_color}0-0${off} ${venv_name}-> "
+  else
+    printf ""
+  fi
+}
+
 function set_prompt() {
   last_result=$? # Must come first
 
@@ -239,6 +261,8 @@ $off \
       prompt_symbol=\#
   fi
 
+  PY_VENV="$(venv_info)"
+
   BASE_PS1="\
 $off\
 $user_color\u\
@@ -248,7 +272,7 @@ $off:\
 $path_color\w\
 $off$prompt_symbol "
 
-  PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}"
+  PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}${PY_VENV}"
 }
 
 trap 'timer_start' DEBUG
@@ -305,6 +329,7 @@ alias ll="ls${ls_color} -l"
 alias la="ls${ls_color} -a"
 alias lstree="tree -if --noreport"
 alias githash="git describe --always --abbrev=40"
+alias netproc="netstat -lantp"
 
 # General aliases file
 bash_aliases=~/.bash_aliases
