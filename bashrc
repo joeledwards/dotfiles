@@ -272,7 +272,7 @@ $off:\
 $path_color\w\
 $off$prompt_symbol "
 
-  PS1="${GIT_PS1}${TIME_PS1}${BASE_PS1}${PY_VENV}"
+  PS1="${TIME_PS1}${GIT_PS1}${BASE_PS1}${PY_VENV}"
 }
 
 trap 'timer_start' DEBUG
