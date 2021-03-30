@@ -1,10 +1,22 @@
+DO_TIME_LOG=${LOG_BASH_INIT}
+
+function time_log () {
+  if [[ $LOG_BASH_INIT -eq 1 ]]; then
+    echo "$($HOME/rbin/ftime iso-bash) => ${@}"
+  fi
+}
+
+time_log "Configuring bash ..."
+
 # Setup items
+time_log "source ~/.bash_head ..."
 bash_head=~/.bash_head
 if [ -f $bash_head ]; then
     . $bash_head
 fi
 
 # ===== BASH Color Escape Sequences =====
+time_log "constants ..."
 # Reset
 Color_Off='\[\e[0m\]'       # Text Reset
 
@@ -101,6 +113,8 @@ root_host_color=$Blue
 
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
+time_log "git completion ..."
+
 git_completion="${HOME}/.git-completion.bash"
 
 GIT_PS1=""
@@ -130,6 +144,7 @@ $off]\
 fi
 
 # ==== Need these early on ====
+time_log "local binaries ..."
 
 home_bin=~/bin
 if [ -x $home_bin ]; then
@@ -141,6 +156,7 @@ if [ -x $home_rbin ]; then
 fi
 
 # ===== The timestamp PS1 =====
+time_log "timing info ..."
 
 function __year() {
     printf "`date +%Y`"
@@ -210,6 +226,7 @@ function timer_stop() {
   unset timer_start
 }
 
+time_log "venv ..."
 function venv_info() {
   local deactivate_type=`type -t deactivate`
   if [ "${deactivate_type}" = "function" ]; then
@@ -227,6 +244,7 @@ function venv_info() {
   fi
 }
 
+time_log "prompt ..."
 function set_prompt() {
   last_result=$? # Must come first
 
@@ -275,6 +293,7 @@ $off$prompt_symbol "
   PS1="${TIME_PS1}${GIT_PS1}${BASE_PS1}${PY_VENV}"
 }
 
+time_log "traps ..."
 trap 'timer_start' DEBUG
 PROMPT_COMMAND='set_prompt'
 
@@ -308,6 +327,8 @@ PROMPT_COMMAND='set_prompt'
 #DIR_STICKY=Ex
 #DIR_WO_STICKY=Ex
 
+time_log "colors ..."
+
 export LSCOLORS=GxFxCxDxBxegedabagaced # BSD/OSX
 #export LS_COLORS=GxFxCxDxBxegedabagaced # Linux
 export CLICOLOR=1
@@ -322,6 +343,8 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+
+time_log "aliases ..."
 
 # ls aliases
 alias ls="ls${ls_color} -p"
@@ -345,6 +368,7 @@ fi
 
 
 # ===== History Configurations =====
+time_log "history ..."
 HISTSIZE=8192
 HISTFILESIZE=16384
 HISTCONTROL=ignoredups # ignorespace | ignoreboth
@@ -352,6 +376,7 @@ HISTTIMEFORMAT="%D - %T : "
 shopt -s histappend
 shopt -s checkwinsize
 
+time_log "PATH ..."
 export PATH
 
 python_lib=~/lib/python
@@ -365,16 +390,22 @@ export VISUAL=view
 export GIT_SSH=`which ssh`
 
 # Don't dump cores larger than this
+time_log "ulimit ..."
 ulimit -c 500000000 # 500 MB
 
 # User-only writes
+time_log "umask ..."
 umask 0022
 
 # Vi key-bindings for shell (default is emacs)
+time_log "key-bindings ..."
 set -o vi
 
 # Additional items (wrap up)
+time_log "source ~/.bash_tail ..."
 bash_tail=~/.bash_tail
 if [ -f $bash_tail ]; then
     . $bash_tail
 fi
+
+time_log "bash ready."
