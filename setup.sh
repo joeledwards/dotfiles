@@ -6,6 +6,7 @@ IDEAVIMRC=$HOME/.ideavimrc
 VIM_DIR=$HOME/.vim
 VRAPPERRC=$HOME/.vrapperrc
 TMUXCONF=$HOME/.tmux.conf
+GITCOMPLETION=$HOME/.git-completion.bash
 
 BUNDLE_DIR=$HOME/.vim/bundle
 VUNDLE_DIR=$BUNDLE_DIR/Vundle.vim
@@ -61,6 +62,14 @@ if [[ -e $TMUXCONF ]]; then
 else
 	echo "linking ${TMUXCONF}"
 	ln -s `$READLINK -f tmux.conf` $TMUXCONF
+fi
+
+# Link .tmux.conf
+if [[ -e $GITCOMPLETION ]]; then
+	echo "${GITCOMPLETION} exists, skipping"
+else
+	echo "linking ${GITCOMPLETION}"
+	ln -s `$READLINK -f git-completion.bash` $GITCOMPLETION
 fi
 
 CC=`which gcc || which clang`

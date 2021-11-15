@@ -1,7 +1,7 @@
 DO_TIME_LOG=${LOG_BASH_INIT}
 
 function time_log () {
-  if [[ $LOG_BASH_INIT -eq 1 ]]; then
+  if [[ $DO_TIME_LOG -eq 1 ]]; then
     echo "$($HOME/rbin/ftime iso-bash) => ${@}"
   fi
 }
@@ -113,35 +113,34 @@ root_host_color=$Blue
 
 # ===== Git Command-Line Completion & PS1 Prefix =====
 # Git completion functions
+time_log "git PS1 ..."
+
+project_color=$Yellow
+branch_color=$White
+describe_color=$Green
+
+function git_ps1() {
+  local project=$(git rev-parse --show-toplevel 2>/dev/null | xargs -L 1 basename 2>/dev/null)
+
+  if [[ ! -z "${project}" ]]; then
+    local project_str="${off}[${project_color}${project}$off:"
+
+    local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    local branch_str="${branch_color}${branch}${off}:"
+
+    local describe=$(git describe --always 2>/dev/null)
+    local describe_str="${describe_color}${describe}${off}]\n"
+
+    echo "${project_str}${branch_str}${describe_str}"
+  fi
+}
+
 time_log "git completion ..."
-
 git_completion="${HOME}/.git-completion.bash"
-
-GIT_PS1=""
-if [ -e $git_completion ]; then
-    . $git_completion
-    repo_color=$Yellow
-    branch_color=$White
-    describe_color=$Green
-
-    GIT_PS1="\
-\$(__gitproject \"\
-$off[\
-$repo_color%s\
-$off:\
-\")\
-\
-\$(__git_ps1 \"\
-$branch_color%s\
-$off:\
-\")\
-\
-\$(__gitdescribe \"\
-$describe_color%s\
-$off]\
-\n\n\")\
-"
+if [[ -e $git_completion ]]; then
+  . $git_completion
 fi
+
 
 # ==== Need these early on ====
 time_log "local binaries ..."
@@ -290,7 +289,7 @@ $off:\
 $path_color\w\
 $off$prompt_symbol "
 
-  PS1="${TIME_PS1}${GIT_PS1}${BASE_PS1}${PY_VENV}"
+  PS1="${TIME_PS1}$(git_ps1)${BASE_PS1}${PY_VENV}"
 }
 
 time_log "traps ..."
