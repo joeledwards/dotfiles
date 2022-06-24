@@ -114,5 +114,5 @@ if [[ -e $VUNDLE_DIR ]]; then
   echo "${VUNDLE_DIR} exists, skipping"
 else
   echo "cloning Vundle repository to ${VUNDLE_DIR}"
-  git clone git://github.com/VundleVim/Vundle.vim.git ${VUNDLE_DIR}
+  git clone git@github.com:VundleVim/Vundle.vim.git ${VUNDLE_DIR}
 fi
