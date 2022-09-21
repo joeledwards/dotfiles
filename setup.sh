@@ -40,14 +40,6 @@ else
 	ln -s `$READLINK -f ideavimrc` $IDEAVIMRC
 fi
 
-# Link .vim
-if [[ -e $VIM_DIR ]]; then
-	echo "${VIM_DIR} exists, skipping"
-else
-	echo "linking ${VIM_DIR}"
-	ln -s `$READLINK -f vim` $VIM_DIR
-fi
-
 # Link .vrapperrc
 if [[ -e $VRAPPERRC ]]; then
 	echo "${VRAPPERRC} exists, skipping"

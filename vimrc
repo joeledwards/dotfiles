@@ -1,32 +1,71 @@
 set nocompatible
 filetype off
 
-" set the runtime path to include Vundle and initialize
-" set rtp+=~/.vim/bundle/Vundle.vim
-" call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" ===== plugins via vim-plug ==================================================
+" :PlugInstall - install
+" :PlugUpdate - update or install
+" :PlugClean - remove unlisted
+" :PlugUpgrade - upgrade vim-plug
+" :PlugStatus - plugins status
+" :PlugDiff - pending changes (like a dry-run of :PlugUpdate)
+" :PlugSnapshot [output-path] - generates a script to restore current state
 
-" let Vundle manage Vundle, required
-" Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/dev/vim-plug')
+" The default plugin directory will be as follows:
+"   - Vim (Linux/macOS): '~/.vim/plugged'
+"   - Vim (Windows): '~/vimfiles/plugged'
+"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
+" You can specify a custom plugin directory by passing it as the argument
+"   - e.g. `call plug#begin('~/.vim/plugged')`
+"   - Avoid using standard Vim directory names like 'plugin'
 
-" Is this needed
-"source %
-"PluginInstall
+" Make sure you use single quotes
 
-" plugins
-"Plugin 'ntpeters/vim-better-whitespace'
-"Plugin 'tpope/vim-fugitive'
-"Plugin 'junegunn/fzf'
-"Plugin 'yggdroot/indentlilne'
-"Plugin 'scoolroose/nerdtree'
-"Plugin 'kien/rainbow_parentheses.vim'
-"Plugin 'Valloric/YouCompleteMe'
+" === My Plugins ===
+Plug 'sheerun/vim-polyglot'
+Plug 'preservim/nerdtree'
+" ==================
 
-" All plugins before here
-" call vundle#end()
+" example plugins below
+
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+"Plug 'junegunn/vim-easy-align'
+
+" Any valid git URL is allowed
+"Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+
+" Multiple Plug commands can be written in a single line using | separators
+"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+" On-demand loading
+"Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+"Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+
+" Using a non-default branch
+"Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+
+" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
+"Plug 'fatih/vim-go', { 'tag': '*' }
+
+" Plugin options
+"Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+
+" Plugin outside ~/.vim/plugged with post-update hook
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+" Unmanaged plugin (manually installed and updated)
+"Plug '~/my-prototype-plugin'
+
+" Initialize plugin system
+" - Automatically executes `filetype plugin indent on` and `syntax enable`.
+call plug#end()
+" You can revert the settings after the call like so:
+"   filetype indent off   " Disable file-type-specific indentation
+"   syntax off            " Disable syntax highlighting
+
+" ===== end plugins section ===================================================
+
 filetype plugin indent on
-
 
 " my Vim configuration
 colorscheme koehler
