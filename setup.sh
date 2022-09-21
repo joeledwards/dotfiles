@@ -95,16 +95,7 @@ if [[ ! -z $CC ]]; then
   fi
 fi
 
-if [[ -e $BUNDLE_DIR ]]; then
-  echo "${BUNDLE_DIR} exists, skipping"
-else
-  echo "creating ${BUNDLE_DIR}"
-  mkdir $BUNDLE_DIR
-fi
+# Setup vim-plug
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-if [[ -e $VUNDLE_DIR ]]; then
-  echo "${VUNDLE_DIR} exists, skipping"
-else
-  echo "cloning Vundle repository to ${VUNDLE_DIR}"
-  git clone git@github.com:VundleVim/Vundle.vim.git ${VUNDLE_DIR}
-fi
