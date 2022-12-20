@@ -22,8 +22,11 @@ call plug#begin('~/dev/vim-plug')
 " Make sure you use single quotes
 
 " === My Plugins ===
-Plug 'sheerun/vim-polyglot'
+Plug 'derekwyatt/vim-scala'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'prabirshrestha/vim-lsp'
 Plug 'preservim/nerdtree'
+Plug 'sheerun/vim-polyglot'
 " ==================
 
 " example plugins below

@@ -18,8 +18,20 @@ You can use `setup.sh` to perform this automatically. NOTE: the setup script wil
 
 ### vim
 * $HOME/.vimrc <- vimrc  # vim configuration
-* $HOME/.vim <- vim  # vim plugins; I recommend using a plugin manager instead, I just haven't had any luck with setting one up myself
 
+Clone vim-plug
+```
+git clone git@github.com/joeledwards/vim-plug ~/dev/git-plug
+```
+OR
+```
+git clone git@github.com:junegunn/vim-plug ~/dev/git-plug
+```
+
+Initialize plugins (in vim)
+```
+:PlugUpdate
+```
 
 ## .bashrc optional customizations
 
