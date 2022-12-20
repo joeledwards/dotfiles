@@ -23,6 +23,8 @@ call plug#begin('~/dev/vim-plug')
 
 " === My Plugins ===
 Plug 'derekwyatt/vim-scala'
+"Plug 'kien/rainbow_parentheses.vim' " This plugin doesn't work
+Plug 'luochen1990/rainbow'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'preservim/nerdtree'
@@ -67,6 +69,9 @@ call plug#end()
 "   syntax off            " Disable syntax highlighting
 
 " ===== end plugins section ===================================================
+
+" Enable rainbow parentheses plugin
+let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
 
 filetype plugin indent on
 

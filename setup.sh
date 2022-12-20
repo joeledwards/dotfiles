@@ -41,16 +41,16 @@ else
 	ln -s $($READLINK -f vimrc) $VIMRC
 fi
 
-# Ensure config directory exists
+# Ensure .config directory exists
 if [[ ! -e $CFG_DIR ]]; then
 	echo "creating directory ${CFG_DIR}"
   mkdir -p $CFG_DIR
 fi
 
-# Link nvim config directory
+# Create .config/nvim directory
 if [[ ! -e $NVIM_DIR ]]; then
-	echo "linking ${NVIM_DIR}"
-	ln -s $VIM_DIR $NVIM_DIR
+	echo "creating directory ${NVIM_DIR}"
+	mkdir -p $NVIM_DIR
 fi
 
 # Link nvim config
@@ -124,7 +124,11 @@ if [[ ! -z $CC ]]; then
   fi
 fi
 
-# Setup vim-plug
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+# Setup vim-plug for Vim
+curl -fLo $VIM_DIR/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# Setup vim-plug for Neovim
+curl -fLo $NVIM_DIR/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
