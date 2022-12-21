@@ -1,2 +1,18 @@
 set visualbell
 set noerrorbells
+
+set incsearch
+set hlsearch
+set hls
+set ignorecase
+set smartcase
+
+set expandtab
+set shiftwidth=2
+set smartindent
+set softtabstop=2
+set ts=2
+
+set cursorline
+
+set number relativenumber
