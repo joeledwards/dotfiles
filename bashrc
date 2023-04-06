@@ -2,7 +2,15 @@ DO_TIME_LOG=${LOG_BASH_INIT}
 
 function time_log () {
   if [[ $DO_TIME_LOG -eq 1 ]]; then
-    echo "$($HOME/rbin/ftime iso-bash) => ${@}"
+    log_line="$($HOME/rbin/ftime iso-bash) INFO => ${@}\n"
+    printf "$log_line"
+  fi
+}
+
+function time_warn () {
+  if [[ $DO_TIME_LOG -eq 1 ]]; then
+    log_line="$($HOME/rbin/ftime iso-bash) \e[0;31mWARNING\e[0m => ${@}\n"
+    printf "$log_line"
   fi
 }
 
@@ -123,7 +131,7 @@ function git_ps1() {
   local project=$(git rev-parse --show-toplevel 2>/dev/null | xargs -L 1 basename 2>/dev/null)
 
   if [[ ! -z "${project}" ]]; then
-    local project_str="${off}[${project_color}${project}$off:"
+    local project_str="${off}[${project_color}${project}${off}:"
 
     local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
     local branch_str="${branch_color}${branch}${off}:"
