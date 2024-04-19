@@ -23,12 +23,13 @@ call plug#begin('~/dev/vim-plug')
 
 " === My Plugins ===
 Plug 'derekwyatt/vim-scala'
-"Plug 'kien/rainbow_parentheses.vim' " This plugin doesn't work
 Plug 'luochen1990/rainbow'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'preservim/nerdtree'
+Plug 'rust-lang/rust.vim'
 Plug 'sheerun/vim-polyglot'
+"Plug 'kien/rainbow_parentheses.vim' " This plugin doesn't work
 " ==================
 
 " example plugins below
@@ -114,3 +115,6 @@ set number relativenumber
 set guioptions=T
 
 let @p='0$F/ld^j@p'
+
+" Toggle NERDTree
+map <C-n> :NERDTreeToggle<CR>
